@@ -1,0 +1,4 @@
+rootProject.name = 'jfx_samples'
+
+include 'app'
+

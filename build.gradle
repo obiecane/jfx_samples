@@ -1,0 +1,39 @@
+buildscript {
+    repositories {
+        maven {
+            url 'https://maven.aliyun.com/repository/public'
+        }
+        maven {
+            url 'https://maven.aliyun.com/repository/google'
+        }
+        maven {
+            url 'https://maven.aliyun.com/repository/gradle-plugin'
+        }
+        google()
+        mavenCentral()
+    }
+}
+
+allprojects {
+    repositories {
+        maven {
+            name 'aliyun-public'
+            url 'https://maven.aliyun.com/repository/public'
+        }
+        maven {
+            name 'aliyun-google'
+            url 'https://maven.aliyun.com/repository/google'
+        }
+        maven {
+            name 'jitpack.io'
+            url 'https://jitpack.io'
+        }
+        mavenLocal()
+        google()
+        mavenCentral()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
