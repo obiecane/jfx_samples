@@ -55,6 +55,18 @@ dependencies {
 //    implementation group: 'org.jogamp.jogl', name: 'jogl-all-main', version:'2.3.2'
 
 //    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+
+    // NOTE: the latest version _is_ 8.0.1!
+    // 8.0.7 was published by mistake
+    compile 'io.datafx:datafx:8.0.1'
+    compile 'io.datafx:flow:8.0.1'
+
+    // FontAwesome
+    // Versions higher than 2.x are for Java 11
+    compile 'org.kordamp.ikonli:ikonli-javafx:2.4.0'
+    compile 'org.kordamp.ikonli:ikonli-fontawesome5-pack:2.4.0'
+
     implementation 'com.jfoenix:jfoenix:9.0.10'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib'
     implementation 'com.github.leewyatt:rxcontrols:11.0.2'
