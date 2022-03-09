@@ -1,6 +1,26 @@
 .root {
-    -fx-font-family: Roboto;
-    src: "/resources/roboto/Roboto-Regular.ttf";
+    -fx-font-family: "Roboto";
+    -fx-font-smoothing-type: gray;
+}
+
+/*
+ * 窗口边框颜色
+ */
+.jfx-decorator {
+    -fx-decorator-color: #4059A9;
+}
+
+/* tab-pane */
+
+.jfx-tab-pane .tab-header-background {
+    -fx-background-color: #4059A9;
+}
+
+.jfx-tab-pane .headers-region .tab .tab-container .tab-label {
+    -fx-text-fill: rgba(255,255,255, .87);
+    -fx-font-weight: NORMAL;
+    -fx-padding: 0 10 6 10;
+    -fx-font-size: 12;
 }
 
 /* Burgers Demo */
@@ -33,9 +53,7 @@
     -fx-max-width: 300;
 }
 
-.jfx-decorator {
-    -fx-decorator-color: RED;
-}
+
 
 .jfx-decorator .jfx-decorator-buttons-container {
     -fx-background-color: -fx-decorator-color;
