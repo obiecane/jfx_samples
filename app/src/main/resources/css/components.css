@@ -25,6 +25,16 @@
     -fx-padding: 0 10 6 10;
     -fx-font-size: 12;
 }
+.jfx-decorator .jfx-decorator-buttons-container {
+    -fx-background-color: -fx-decorator-color;
+    -fx-max-height: 30;
+    -fx-min-height: 30;
+}
+
+.jfx-decorator .resize-border {
+    -fx-border-color: -fx-decorator-color;
+    -fx-border-width: 0 4 4 4;
+}
 
 /* Burgers Demo */
 
@@ -58,14 +68,7 @@
 
 
 
-.jfx-decorator .jfx-decorator-buttons-container {
-    -fx-background-color: -fx-decorator-color;
-}
 
-.jfx-decorator .resize-border {
-    -fx-border-color: -fx-decorator-color;
-    -fx-border-width: 0 4 4 4;
-}
 
 .jfx-text-area, .text-area {
     -fx-font-weight: BOLD;
