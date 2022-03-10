@@ -1,7 +1,6 @@
 package com.blueggy.jfxsamples
 
 import com.blueggy.jfxsamples.pages.mainDecorator
-import com.blueggy.jfxsamples.pages.mainPane
 import com.jfoenix.assets.JFoenixResources
 import javafx.application.Application
 import javafx.scene.Scene
