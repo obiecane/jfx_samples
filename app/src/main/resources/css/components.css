@@ -9,6 +9,9 @@
 .jfx-decorator {
     -fx-decorator-color: #4059A9;
 }
+.jfx-decorator-title {
+    -fx-font-size: 15;
+}
 
 /* tab-pane */
 

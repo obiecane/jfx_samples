@@ -1,13 +1,42 @@
 package com.blueggy.jfxsamples.pages
 
 import com.jfoenix.controls.JFXButton
+import com.jfoenix.controls.JFXDecorator
 import com.jfoenix.controls.JFXTabPane
 import javafx.geometry.Insets
 import javafx.geometry.Side
-import javafx.scene.control.Button
-import javafx.scene.control.Tab
+import javafx.scene.control.*
+import javafx.scene.layout.BorderPane
 import javafx.scene.layout.FlowPane
 import javafx.scene.layout.StackPane
+import javafx.stage.Stage
+
+fun mainDecorator(stage: Stage): JFXDecorator {
+    return JFXDecorator(stage, mainPane(), false, true, true).apply {
+    }
+}
+
+fun mainMenu(): MenuBar {
+
+    fun fileMenu(): Menu {
+        return Menu("File").apply {
+            this.items.addAll(
+                MenuItem("File")
+            )
+        }
+    }
+
+    return MenuBar().apply {
+        this.menus.addAll(fileMenu())
+    }
+}
+
+fun mainPane(): BorderPane {
+    return BorderPane().apply {
+        top = mainMenu()
+        center = tabPane()
+    }
+}
 
 fun tabPane(): JFXTabPane {
     val main = FlowPane()
