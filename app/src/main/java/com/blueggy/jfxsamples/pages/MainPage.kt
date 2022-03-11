@@ -1,15 +1,15 @@
 package com.blueggy.jfxsamples.pages
 
-import com.jfoenix.controls.JFXButton
-import com.jfoenix.controls.JFXDecorator
-import com.jfoenix.controls.JFXTabPane
+import com.jfoenix.controls.*
+import com.jfoenix.validation.RequiredFieldValidator
+import javafx.beans.value.ObservableValue
 import javafx.geometry.Insets
 import javafx.geometry.Side
 import javafx.scene.control.*
-import javafx.scene.layout.BorderPane
-import javafx.scene.layout.FlowPane
-import javafx.scene.layout.StackPane
+import javafx.scene.layout.*
 import javafx.stage.Stage
+import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid
+import org.kordamp.ikonli.javafx.FontIcon
 
 fun mainDecorator(stage: Stage): JFXDecorator {
     return JFXDecorator(stage, mainPane(), false, true, true).apply {
@@ -31,11 +31,68 @@ fun mainMenu(): MenuBar {
     }
 }
 
-fun mainPane(): BorderPane {
+private fun mainPane(): BorderPane {
     return BorderPane().apply {
         top = mainMenu()
         center = tabPane()
     }
+}
+
+private fun testTab(): Tab {
+    val pane = VBox()
+    pane.spacing = 30.0
+    pane.style = "-fx-background-color:WHITE;-fx-padding:40;"
+
+    pane.children.add(TextField())
+
+    val field = JFXTextField()
+    field.isLabelFloat = true
+    field.promptText = "Type Something"
+    pane.children.add(field)
+
+
+    val disabledField = JFXTextField()
+    disabledField.style = "-fx-label-float:true;"
+    disabledField.promptText = "I'm disabled.."
+    disabledField.isDisable = true
+    pane.children.add(disabledField)
+
+    val validationField = JFXTextField()
+
+    validationField.promptText = "With Validation.."
+    var validator = RequiredFieldValidator()
+    validator.message = "Input Required"
+    var warnIcon = FontIcon(FontAwesomeSolid.EXCLAMATION_TRIANGLE)
+    warnIcon.styleClass.add("error")
+    validator.icon = warnIcon
+    validationField.validators.add(validator)
+    validationField.focusedProperty()
+        .addListener { _: ObservableValue<out Boolean?>?, _: Boolean?, newVal: Boolean? ->
+            if (!newVal!!) {
+                validationField.validate()
+            }
+        }
+    pane.children.add(validationField)
+
+
+    val passwordField = JFXPasswordField()
+    passwordField.style = "-fx-label-float:true;"
+    passwordField.promptText = "Password"
+    validator = RequiredFieldValidator()
+    validator.message = "Password Can't be empty"
+    warnIcon = FontIcon(FontAwesomeSolid.EXCLAMATION_TRIANGLE)
+    warnIcon.styleClass.add("error")
+    validator.icon = warnIcon
+    passwordField.validators.add(validator)
+    passwordField.focusedProperty()
+        .addListener { _: ObservableValue<out Boolean?>?, _: Boolean?, newVal: Boolean? ->
+            if (!newVal!!) {
+                passwordField.validate()
+            }
+        }
+    pane.children.add(passwordField)
+
+    return Tab("test", pane)
 }
 
 fun tabPane(): JFXTabPane {
@@ -60,9 +117,7 @@ fun tabPane(): JFXTabPane {
     }
     StackPane.setMargin(main, Insets(100.0))
 
-    fun testTab(): Tab {
-        return Tab("hello", pane)
-    }
+
 
     fun testTab2(): Tab {
         return Tab("hello2", pane)
