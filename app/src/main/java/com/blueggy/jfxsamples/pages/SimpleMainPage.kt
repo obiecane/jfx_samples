@@ -6,13 +6,13 @@ import javafx.scene.control.*
 import javafx.scene.layout.*
 import javafx.stage.Stage
 
-fun mainDecorator(stage: Stage): JFXDecorator {
-    return JFXDecorator(stage, mainPane(), false, true, true).apply {
+
+class SimpleMainPage(ps: Stage) : AbstractMainPage(ps) {
+
+    override fun mainPane(): Parent {
+        return AnchorPane()
     }
 }
 
 
-private fun mainPane(): Parent {
-    return AnchorPane()
-}
 
