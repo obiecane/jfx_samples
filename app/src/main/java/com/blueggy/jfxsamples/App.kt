@@ -1,7 +1,7 @@
 package com.blueggy.jfxsamples
 
 import com.blueggy.jfxsamples.pages.IMainPage
-import com.blueggy.jfxsamples.pages.SimpleMainPage
+import com.blueggy.jfxsamples.pages.ResizeablePaneTestMainPage
 import com.jfoenix.assets.JFoenixResources
 import javafx.application.Application
 import javafx.scene.Scene
@@ -14,7 +14,7 @@ fun main(args: Array<String>) {
 
 class App : Application() {
     override fun start(ps: Stage) {
-        val mainPage: IMainPage = SimpleMainPage(ps)
+        val mainPage: IMainPage = ResizeablePaneTestMainPage(ps)
         ps.apply {
             this.title = "JFX Button Demo"
             this.scene = Scene(mainPage.mainDecorator(), 1000.0, 800.0).apply {
