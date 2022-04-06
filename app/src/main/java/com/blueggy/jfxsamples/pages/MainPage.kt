@@ -8,8 +8,6 @@ import javafx.geometry.Side
 import javafx.scene.control.*
 import javafx.scene.layout.*
 import javafx.stage.Stage
-import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid
-import org.kordamp.ikonli.javafx.FontIcon
 
 fun mainDecorator(stage: Stage): JFXDecorator {
     return JFXDecorator(stage, mainPane(), false, true, true).apply {
@@ -62,9 +60,6 @@ private fun testTab(): Tab {
     validationField.promptText = "With Validation.."
     var validator = RequiredFieldValidator()
     validator.message = "Input Required"
-    var warnIcon = FontIcon(FontAwesomeSolid.EXCLAMATION_TRIANGLE)
-    warnIcon.styleClass.add("error")
-    validator.icon = warnIcon
     validationField.validators.add(validator)
     validationField.focusedProperty()
         .addListener { _: ObservableValue<out Boolean?>?, _: Boolean?, newVal: Boolean? ->
@@ -80,9 +75,6 @@ private fun testTab(): Tab {
     passwordField.promptText = "Password"
     validator = RequiredFieldValidator()
     validator.message = "Password Can't be empty"
-    warnIcon = FontIcon(FontAwesomeSolid.EXCLAMATION_TRIANGLE)
-    warnIcon.styleClass.add("error")
-    validator.icon = warnIcon
     passwordField.validators.add(validator)
     passwordField.focusedProperty()
         .addListener { _: ObservableValue<out Boolean?>?, _: Boolean?, newVal: Boolean? ->

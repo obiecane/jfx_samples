@@ -14,7 +14,17 @@ buildscript {
     }
 }
 
-allprojects {
+plugins {
+    id "org.javamodularity.moduleplugin" version "1.8.9"
+}
+
+version = "1.0.0"
+
+
+subprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'org.javamodularity.moduleplugin'
+
     repositories {
         maven {
             name 'aliyun-public'
@@ -32,8 +42,4 @@ allprojects {
         google()
         mavenCentral()
     }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
 }
