@@ -1,21 +1,20 @@
 package com.blueggy.jfxsamples.pages
 
-import com.blueggy.jfxsamples.components.ResizeablePane
-import javafx.scene.Parent
-import javafx.scene.layout.AnchorPane
+import com.blueggy.jfxsamples.components.LayerSplitPane
 import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
 import javafx.scene.layout.Pane
 import javafx.scene.paint.Color
 import javafx.stage.Stage
 
-class ResizeablePaneTestMainPage(ps: Stage) : AbstractMainPage(ps) {
+class LayerSplitPaneTestMainPage(ps: Stage) : AbstractMainPage(ps) {
 
-    override fun mainPane(): ResizeablePane {
-        return ResizeablePane().apply {
+    override fun mainPane(): LayerSplitPane {
+        return LayerSplitPane().apply {
             id = "ResizeablePane"
-            children.add(pane1())
-            children.add(pane2())
+
+            items.add(pane1())
+            items.add(pane2())
         }
     }
 
@@ -25,6 +24,8 @@ class ResizeablePaneTestMainPage(ps: Stage) : AbstractMainPage(ps) {
             background = Background(BackgroundFill(Color.AQUA, null, null))
             prefWidth = 50.0
             prefHeight = 50.0
+            minWidth = 50.0
+            minHeight = 50.0
         }
     }
 
@@ -33,6 +34,8 @@ class ResizeablePaneTestMainPage(ps: Stage) : AbstractMainPage(ps) {
             background = Background(BackgroundFill(Color.BEIGE, null, null))
             prefWidth = 50.0
             prefHeight = 50.0
+            minWidth = 50.0
+            minHeight = 50.0
         }
     }
 
@@ -41,6 +44,8 @@ class ResizeablePaneTestMainPage(ps: Stage) : AbstractMainPage(ps) {
             background = Background(BackgroundFill(Color.CADETBLUE, null, null))
             prefWidth = 50.0
             prefHeight = 50.0
+            minWidth = 50.0
+            minHeight = 50.0
         }
     }
 }
