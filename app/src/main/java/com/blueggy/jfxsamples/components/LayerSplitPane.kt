@@ -7,6 +7,7 @@ import javafx.collections.ListChangeListener
 import javafx.collections.ObservableList
 import javafx.geometry.HPos
 import javafx.geometry.Orientation
+import javafx.geometry.Point2D
 import javafx.geometry.VPos
 import javafx.scene.Cursor
 import javafx.scene.Node
@@ -19,6 +20,7 @@ import javafx.scene.shape.Rectangle
 
 class LayerSplitPane : Control() {
     val items: ObservableList<Node> = FXCollections.observableArrayList<Node>()
+
     val orientationProperty: ObjectProperty<Orientation> by lazy { SimpleObjectProperty<Orientation>(Orientation.HORIZONTAL) }
 
     init {
@@ -57,17 +59,10 @@ class LayerSplitPane : Control() {
 }
 
 
-
-
-
-
-
-
-
-
 class LayerSplitPaneSkin(control: LayerSplitPane) : SkinBase<LayerSplitPane>(control) {
     private var horizontal = false
     private val contentRegions: ObservableList<Content> = FXCollections.observableArrayList<Content>()
+    private val contentDividers: ObservableList<ContentDivider> = FXCollections.observableArrayList<ContentDivider>()
 
     init {
         horizontal = skinnable.getOrientation() == Orientation.HORIZONTAL
@@ -85,12 +80,16 @@ class LayerSplitPaneSkin(control: LayerSplitPane) : SkinBase<LayerSplitPane>(con
 
     private fun saa() {
         skinnable.addEventHandler(MouseEvent.MOUSE_MOVED) {
-            for (child in children) {
-                val c = child as Content
+            if (horizontal) {
+                for (divider in contentDividers) {
+                    if (it.x < divider.p1.x) {
+                        skinnable.cursor = Cursor.W_RESIZE
+                        break
+                    }
+                }
             }
-            val s = it.target as LayerSplitPane
-            s.cursor = Cursor.NE_RESIZE
-            println(it)
+
+
         }
     }
 
@@ -103,9 +102,24 @@ class LayerSplitPaneSkin(control: LayerSplitPane) : SkinBase<LayerSplitPane>(con
             return
         }
 
-        for (c in contentRegions) {
-            if (horizontal) {
-                layoutInArea(c, c.x, c.y, 300.0, 300.0, 0.0, HPos.CENTER, VPos.CENTER)
+
+        // [横向]给每个子节点分配宽度
+        if (horizontal) {
+            val avgW = contentWidth / contentRegions.size
+            for ((idx, c) in contentRegions.withIndex()) {
+                layoutInArea(c, c.x + idx * avgW, c.y, avgW, contentHeight, 0.0, HPos.CENTER, VPos.CENTER)
+                if (idx > 0) {
+                    val divider = contentDividers[idx - 1]
+                    divider.p1 = Point2D(c.x, 0.0)
+                    divider.p2 = Point2D(c.x, contentHeight)
+                }
+            }
+        }
+        // [纵向]给每个子节点分配高度
+        else {
+            val avgH = contentWidth / contentRegions.size
+            for ((idx, c) in contentRegions.withIndex()) {
+                layoutInArea(c, c.x, c.y + idx * avgH, contentWidth, avgH, 0.0, HPos.CENTER, VPos.CENTER)
             }
         }
     }
@@ -143,6 +157,9 @@ class LayerSplitPaneSkin(control: LayerSplitPane) : SkinBase<LayerSplitPane>(con
         c.minWidth = 100.0
         contentRegions.add(index, c)
         children.add(index, c)
+        if (children.size > 1) {
+            contentDividers.add(ContentDivider())
+        }
     }
 
     private fun removeContent(n: Node) {
@@ -162,11 +179,11 @@ class LayerSplitPaneSkin(control: LayerSplitPane) : SkinBase<LayerSplitPane>(con
         var x: Double
         var y: Double
 
+        // This is the area of the panel.  This will be used as the
+        // width/height during layout.
+        var area = 0.0
+
         //
-//        // This is the area of the panel.  This will be used as the
-//        // width/height during layout.
-//        var area = 0.0
-//
 //        // This is used to save the current area during resizing when
 //        // isResizeableWithParent equals false.
 //        var resizableWithParentArea = 0.0
@@ -212,5 +229,14 @@ class LayerSplitPaneSkin(control: LayerSplitPane) : SkinBase<LayerSplitPane>(con
             y = 0.0
             style = "-fx-background-color: #457349"
         }
+    }
+
+    /**
+     * 分割线
+     */
+    internal class ContentDivider {
+        /* 分割线的两个端点坐标 */
+        var p1: Point2D = Point2D.ZERO
+        var p2: Point2D = Point2D.ZERO
     }
 }
