@@ -3,10 +3,12 @@ package com.blueggy.jfxsamples.components
 import javafx.collections.FXCollections
 import javafx.collections.ListChangeListener
 import javafx.collections.ObservableList
+import javafx.geometry.HPos
 import javafx.geometry.Orientation
+import javafx.geometry.VPos
 import javafx.scene.Node
 import javafx.scene.control.SkinBase
-import javafx.scene.control.SplitPane
+import javafx.scene.input.MouseEvent
 import javafx.scene.layout.StackPane
 import javafx.scene.shape.Rectangle
 
@@ -21,29 +23,41 @@ class LayerSplitPaneSkin(control: LayerSplitPane) : SkinBase<LayerSplitPane>(con
             addContent(i, item)
         }
 
-        initializeContentListener()
+//        initializeContentListener()
         registerChangeListener(control.widthProperty()) { skinnable.requestLayout() }
         registerChangeListener(control.heightProperty()) { skinnable.requestLayout() }
+
+        saa()
     }
 
+    private fun saa() {
+        skinnable.addEventHandler(MouseEvent.MOUSE_MOVED) {
+            for (child in children) {
+                val c = child as Content
+            }
+            println(it)
+        }
+    }
 
-//    override fun layoutChildren(contentX: Double, contentY: Double, contentWidth: Double, contentHeight: Double) {
-//        val sw: Double = skinnable.width
-//        val sh: Double = skinnable.height
-//
-//        if ((if (horizontal) sw == 0.0 else sh == 0.0) || contentRegions.isEmpty()) {
-//            return
-//        }
-//    }
 
     override fun layoutChildren(contentX: Double, contentY: Double, contentWidth: Double, contentHeight: Double) {
-        super.layoutChildren(contentX, contentY, contentWidth, contentHeight)
-    }
+        val s = skinnable
+        val sw = s.width
+        val sh = s.height
+        if ((if (horizontal) sw == 0.0 else sh == 0.0) || contentRegions.isEmpty()) {
+            return
+        }
 
+        for (c in contentRegions) {
+            if (horizontal) {
+                layoutInArea(c, c.x, c.y, 300.0, 300.0, 0.0, HPos.CENTER, VPos.CENTER)
+            }
+        }
+    }
 
 
     private fun initializeContentListener() {
-        skinnable.items.addListener { c: ListChangeListener.Change<out Node?> ->
+        skinnable.items.addListener { c: ListChangeListener.Change<out Node> ->
             while (c.next()) {
                 if (c.wasPermutated() || c.wasUpdated()) {
                     /**
@@ -65,13 +79,13 @@ class LayerSplitPaneSkin(control: LayerSplitPane) : SkinBase<LayerSplitPane>(con
                     }
                 }
             }
-
-
         }
     }
 
     private fun addContent(index: Int, n: Node) {
         val c = Content(n)
+        c.minHeight = 100.0
+        c.minWidth = 100.0
         contentRegions.add(index, c)
         children.add(index, c)
     }
@@ -87,60 +101,61 @@ class LayerSplitPaneSkin(control: LayerSplitPane) : SkinBase<LayerSplitPane>(con
         }
     }
 
-    internal class Content(n: Node?) : StackPane() {
-        val content: Node?
+    internal class Content(n: Node) : StackPane(n) {
+        val content: Node
         private val clipRect: Rectangle
         var x: Double
         var y: Double
 
-        // This is the area of the panel.  This will be used as the
-        // width/height during layout.
-        var area = 0.0
-
-        // This is used to save the current area during resizing when
-        // isResizeableWithParent equals false.
-        var resizableWithParentArea = 0.0
-            set(resizableWithParentArea) {
-                field = if (!isResizableWithParent) {
-                    resizableWithParentArea
-                } else {
-                    0.0
-                }
-            }
-
-        // This is the minimum available area for other panels to use
-        // if they need more space.
-        var available = 0.0
-
-        val isResizableWithParent: Boolean
-            get() = SplitPane.isResizableWithParent(content)
-
-        protected fun setClipSize(w: Double, h: Double) {
-            clipRect.width = w
-            clipRect.height = h
-        }
-
+        //
+//        // This is the area of the panel.  This will be used as the
+//        // width/height during layout.
+//        var area = 0.0
+//
+//        // This is used to save the current area during resizing when
+//        // isResizeableWithParent equals false.
+//        var resizableWithParentArea = 0.0
+//            set(resizableWithParentArea) {
+//                field = if (!isResizableWithParent) {
+//                    resizableWithParentArea
+//                } else {
+//                    0.0
+//                }
+//            }
+//
+//        // This is the minimum available area for other panels to use
+//        // if they need more space.
+//        var available = 0.0
+//
+//        val isResizableWithParent: Boolean
+//            get() = SplitPane.isResizableWithParent(content)
+//
+//        protected fun setClipSize(w: Double, h: Double) {
+//            clipRect.width = w
+//            clipRect.height = h
+//        }
+//
         fun dispose() {
             children.remove(content)
         }
 
-        override fun computeMaxWidth(height: Double): Double {
-            return snapSizeX(content!!.maxWidth(height))
-        }
-
-        override fun computeMaxHeight(width: Double): Double {
-            return snapSizeY(content!!.maxHeight(width))
-        }
-
+        //
+////        override fun computeMaxWidth(height: Double): Double {
+////            return snapSizeX(content.maxWidth(height))
+////        }
+////
+////        override fun computeMaxHeight(width: Double): Double {
+////            return snapSizeY(content.maxHeight(width))
+////        }
+//
         init {
             clipRect = Rectangle()
-            clip = clipRect
+//            clip = clipRect
             content = n
-            if (n != null) {
-                children.add(n)
-            }
+//            children.add(n)
             x = 0.0
             y = 0.0
+            style = "-fx-background-color: #457349"
         }
     }
 }
