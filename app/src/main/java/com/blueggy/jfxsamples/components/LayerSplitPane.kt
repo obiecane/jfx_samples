@@ -60,9 +60,11 @@ class LayerSplitPane : Control() {
 
 
 class LayerSplitPaneSkin(control: LayerSplitPane) : SkinBase<LayerSplitPane>(control) {
+    private val DIVIDER_WIDE = 4
     private var horizontal = false
     private val contentRegions: ObservableList<Content> = FXCollections.observableArrayList<Content>()
     private val contentDividers: ObservableList<ContentDivider> = FXCollections.observableArrayList<ContentDivider>()
+    private var activeDividerIdx = -1
 
     init {
         horizontal = skinnable.getOrientation() == Orientation.HORIZONTAL
@@ -75,21 +77,36 @@ class LayerSplitPaneSkin(control: LayerSplitPane) : SkinBase<LayerSplitPane>(con
         registerChangeListener(control.widthProperty()) { skinnable.requestLayout() }
         registerChangeListener(control.heightProperty()) { skinnable.requestLayout() }
 
-        saa()
+        registerResizeListener()
     }
 
-    private fun saa() {
+    private fun registerResizeListener() {
         skinnable.addEventHandler(MouseEvent.MOUSE_MOVED) {
             if (horizontal) {
-                for (divider in contentDividers) {
-                    if (it.x < divider.p1.x) {
-                        skinnable.cursor = Cursor.W_RESIZE
-                        break
-                    }
+                activeDividerIdx = contentDividers.indexOfFirst { d ->
+                    d.p1.x - DIVIDER_WIDE <= it.x && it.x <= d.p1.x + DIVIDER_WIDE
+                }
+
+                if (activeDividerIdx < 0) {
+                    skinnable.cursor = Cursor.DEFAULT
+                } else {
+                    skinnable.cursor = Cursor.W_RESIZE
                 }
             }
+        }
 
+        skinnable.addEventHandler(MouseEvent.MOUSE_DRAGGED) {
+            if (activeDividerIdx >= 0) {
+                val c1 = contentRegions[activeDividerIdx]
+                val c2 = contentRegions[activeDividerIdx + 1]
 
+                c1.area = it.x.coerceAtLeast(0.0)
+                c2.area = skinnable.width - c1.area
+
+                println("${skinnable.width}    c1.ares=${c1.area}  c2.area=${c2.area}")
+
+                skinnable.requestLayout()
+            }
         }
     }
 
@@ -102,17 +119,25 @@ class LayerSplitPaneSkin(control: LayerSplitPane) : SkinBase<LayerSplitPane>(con
             return
         }
 
-
+        println("layoutChildren  $contentWidth")
         // [横向]给每个子节点分配宽度
         if (horizontal) {
             val avgW = contentWidth / contentRegions.size
+            var offsetX = 0.0
             for ((idx, c) in contentRegions.withIndex()) {
-                layoutInArea(c, c.x + idx * avgW, c.y, avgW, contentHeight, 0.0, HPos.CENTER, VPos.CENTER)
+                var w = c.area
+                if (w < 0) {
+                    w = avgW
+                }
+                layoutInArea(c, c.x + offsetX, c.y, w, contentHeight, 0.0, HPos.CENTER, VPos.CENTER)
+
+
                 if (idx > 0) {
                     val divider = contentDividers[idx - 1]
-                    divider.p1 = Point2D(c.x, 0.0)
-                    divider.p2 = Point2D(c.x, contentHeight)
+                    divider.p1 = Point2D(c.x + offsetX, 0.0)
                 }
+
+                offsetX += w
             }
         }
         // [纵向]给每个子节点分配高度
@@ -181,7 +206,7 @@ class LayerSplitPaneSkin(control: LayerSplitPane) : SkinBase<LayerSplitPane>(con
 
         // This is the area of the panel.  This will be used as the
         // width/height during layout.
-        var area = 0.0
+        var area = Double.NEGATIVE_INFINITY
 
         //
 //        // This is used to save the current area during resizing when
@@ -237,6 +262,5 @@ class LayerSplitPaneSkin(control: LayerSplitPane) : SkinBase<LayerSplitPane>(con
     internal class ContentDivider {
         /* 分割线的两个端点坐标 */
         var p1: Point2D = Point2D.ZERO
-        var p2: Point2D = Point2D.ZERO
     }
 }
