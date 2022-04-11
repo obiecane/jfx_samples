@@ -84,7 +84,7 @@ class LayerSplitPaneSkin(control: LayerSplitPane) : SkinBase<LayerSplitPane>(con
         skinnable.addEventHandler(MouseEvent.MOUSE_MOVED) {
             if (horizontal) {
                 activeDividerIdx = contentDividers.indexOfFirst { d ->
-                    d.p1.x - DIVIDER_WIDE <= it.x && it.x <= d.p1.x + DIVIDER_WIDE
+                    d.x - DIVIDER_WIDE <= it.x && it.x <= d.x + DIVIDER_WIDE
                 }
 
                 if (activeDividerIdx < 0) {
@@ -96,12 +96,20 @@ class LayerSplitPaneSkin(control: LayerSplitPane) : SkinBase<LayerSplitPane>(con
         }
 
         skinnable.addEventHandler(MouseEvent.MOUSE_DRAGGED) {
+
+
             if (activeDividerIdx >= 0) {
+                var offset = 0.0
+                for (i in 0 until activeDividerIdx) {
+                    offset += contentRegions[i].width
+                }
+
                 val c1 = contentRegions[activeDividerIdx]
                 val c2 = contentRegions[activeDividerIdx + 1]
+                val totalW = c1.width + c2.width
 
-                c1.area = it.x.coerceAtLeast(0.0)
-                c2.area = skinnable.width - c1.area
+                c1.area = (it.x - offset).coerceAtLeast(0.0)
+                c2.area = totalW - c1.area
 
                 println("${skinnable.width}    c1.ares=${c1.area}  c2.area=${c2.area}")
 
@@ -134,7 +142,7 @@ class LayerSplitPaneSkin(control: LayerSplitPane) : SkinBase<LayerSplitPane>(con
 
                 if (idx > 0) {
                     val divider = contentDividers[idx - 1]
-                    divider.p1 = Point2D(c.x + offsetX, 0.0)
+                    divider.x = c.x + offsetX
                 }
 
                 offsetX += w
@@ -260,7 +268,8 @@ class LayerSplitPaneSkin(control: LayerSplitPane) : SkinBase<LayerSplitPane>(con
      * 分割线
      */
     internal class ContentDivider {
-        /* 分割线的两个端点坐标 */
-        var p1: Point2D = Point2D.ZERO
+        /* 分割线的分割点坐标 */
+        var x = 0.0
+        var y = 0.0
     }
 }

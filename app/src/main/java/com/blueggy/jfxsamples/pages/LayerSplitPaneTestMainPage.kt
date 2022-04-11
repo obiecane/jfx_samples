@@ -15,6 +15,7 @@ class LayerSplitPaneTestMainPage(ps: Stage) : AbstractMainPage(ps) {
 
             items.add(pane1())
             items.add(pane2())
+            items.add(pane3())
         }
     }
 
@@ -31,7 +32,7 @@ class LayerSplitPaneTestMainPage(ps: Stage) : AbstractMainPage(ps) {
 
     private fun pane2(): Pane {
         return Pane().apply {
-            background = Background(BackgroundFill(Color.BLACK, null, null))
+            background = Background(BackgroundFill(Color.DARKKHAKI, null, null))
             prefWidth = 50.0
             prefHeight = 50.0
             minWidth = 50.0
