@@ -130,15 +130,26 @@ class LayerSplitPaneSkin(control: LayerSplitPane) : SkinBase<LayerSplitPane>(con
         println("layoutChildren  $contentWidth")
         // [横向]给每个子节点分配宽度
         if (horizontal) {
-            val avgW = contentWidth / contentRegions.size
+            // 分配宽度
+            var remainingWidth = contentWidth
+            var fSum = 0
+            for (c in contentRegions) {
+                val w = c.area
+                if (w >= 0) {
+                    remainingWidth -= w
+                } else {
+                    fSum++
+                }
+            }
+
             var offsetX = 0.0
+            val avgW = remainingWidth / fSum
             for ((idx, c) in contentRegions.withIndex()) {
                 var w = c.area
                 if (w < 0) {
                     w = avgW
                 }
                 layoutInArea(c, c.x + offsetX, c.y, w, contentHeight, 0.0, HPos.CENTER, VPos.CENTER)
-
 
                 if (idx > 0) {
                     val divider = contentDividers[idx - 1]
